@@ -1,0 +1,30 @@
+{
+    "name": "entanet/entanet-insights",
+    "description": "A package to send data to the entaqa app for visualization of project issues.",
+    "type": "extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ryan Ralphs",
+            "email": "ryan.ralphs@enta.net",
+            "role": "SDET"
+        }
+    ],
+    "require": {
+        "php": "^7.1.3",
+        "superbalist/php-pubsub": "^2.0.0",
+        "superbalist/laravel-pubsub": "^3.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Entanet\\Insights\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Entanet\\Insights\\InsightsServiceProvider"
+            ]
+        }
+    }
+}

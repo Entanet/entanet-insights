@@ -19,8 +19,10 @@ Add the following to the config/app.php providers array
 Superbalist\LaravelPubSub\PubSubServiceProvider::class
 ```
 
-Publish the insights command
+Publish the insights commands
 ```
+php artisan vendor:publish --provider="NunoMaduro\PhpInsights\Application\Adapters\Laravel\InsightsServiceProvider"
+
 php artisan vendor:publish --provider="Entanet\Insights\InsightsServiceProvider"
 ```
 
@@ -29,6 +31,28 @@ Ensure the command is available:
 app/console/commands/EntanetInsights.php
 ```
 
+Now Register that command in
+```
+app/console/commands/Kernel.php
+```
+
+Register as (At the top):
+```
+use Entanet\Insights\EntanetInsights;
+
+```
+
+And then add this to the $commands array:
+```
+/**
+     * The Artisan commands provided by your application.
+     *
+     * @var array
+     */
+    protected $commands = [
+        EntanetInsights::class
+    ];
+```
 Ensure your env contains valid Kafka credentials and Kafka is set up
 on your machine or within the container you're using.
 ```
@@ -65,7 +89,12 @@ docker-compose exec entaqa-app php artisan scores:listen
 ```
 
 #### Sending Scores
-Please ensure you have your "app name" set within your config/app.php file. 
+Please ensure you have your "app name" set within your config/app.php file and your APP_NAME in your env.
+
+After setting this run:
+```
+php artisan config:clear
+```
 This is responsible for naming the project within entaqa. 
 Stick to repository naming conventions without spaces in, snake, camel and kebab case are all fine.
 

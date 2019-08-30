@@ -57,13 +57,49 @@ class EntanetInsights extends Command
     {
         $command = shell_exec('php artisan insights --no-interaction');
 
+
+        $command = $command . ' ' . 'End of Report.';
+
         preg_match_all('#([^\s]+)%#', $command, $matches);
 
+        $codeTag = '[Code]';
+        $architectureTag = '[Architecture]';
+        $styleTag = '[Style]';
+        $complexityTag = '[Complexity]';
+
+
+        if(strpos($command, $codeTag)) {
+            $code = $this->str_between($command, '[Code]', '[Complexity]');
+        } else
+        {
+            $code = 'No Code Issues to Report';
+        }
+
+        if(strpos($command, $complexityTag)) {
+            $complexity = $this->str_between($command, '[Complexity]', '[Architecture]');
+        } else
+        {
+            $complexity ='No Complexity Issues to Report';
+        }
+
+
+        if(strpos($command, $architectureTag)) {
+            $architecture = $this->str_between($command, '[Architecture]', '[Style]');
+        } else
+        {
+            $architecture = 'No Architecture Issues to Report';
+        }
+
+
+        if(strpos($command, $styleTag)) {
+            $style = $this->str_between($command, '[Style]', 'End of Report.');
+        } else
+        {
+            $style = 'No Style Issues to Report';
+        }
+
+
         $name = config('app.name');
-        $code = $this->str_between($command, '[Code]', '[Architecture]');
-        $architecture = $this->str_between($command, '[Architecture]', '[Style]');
-        $style = $this->str_between($command, '[Style]', '[Security]');
-        $security = $this->str_between($command, '[Security]', '✨');
 
         $matches['name'] = $name;
         $matches['code'] = $matches[1][0];
@@ -73,7 +109,7 @@ class EntanetInsights extends Command
         $matches['code_issues'] = $code;
         $matches['architecture_issues'] = $architecture;
         $matches['style_issues'] = $style;
-        $matches['security_issues'] = $security;
+        $matches['complexity_issues'] = $complexity;
         unset($matches[0]);
         unset($matches[1]);
 
